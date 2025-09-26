@@ -1,0 +1,82 @@
+openapi: 3.0.0
+info:
+  title: Terrascope API
+  description: API for finding hotels in a given geographical area.
+  version: 1.0.0
+servers:
+  - url: /api
+paths:
+  /hotels:
+    get:
+      summary: Retrieve hotels within a bounding box
+      description: Fetches a list of hotels given the geographical coordinates of a bounding box.
+      parameters:
+        - name: north
+          in: query
+          required: true
+          description: The latitude of the northern boundary.
+          schema:
+            type: number
+            format: float
+        - name: south
+          in: query
+          required: true
+          description: The latitude of the southern boundary.
+          schema:
+            type: number
+            format: float
+        - name: east
+          in: query
+          required: true
+          description: The longitude of the eastern boundary.
+          schema:
+            type: number
+            format: float
+        - name: west
+          in: query
+          required: true
+          description: The longitude of the western boundary.
+          schema:
+            type: number
+            format: float
+      responses:
+        '200':
+          description: A successful response returning a list of hotels.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Hotel'
+components:
+  schemas:
+    Hotel:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the hotel.
+        place_id:
+          type: string
+          description: A unique identifier for the place from Google Places API.
+        location:
+          type: object
+          properties:
+            lat:
+              type: number
+              format: float
+              description: The latitude of the hotel.
+            lng:
+              type: number
+              format: float
+              description: The longitude of the hotel.
+        rating:
+          type: number
+          format: float
+          description: The hotel's rating from 1.0 to 5.0.
+        user_ratings_total:
+          type: integer
+          description: The total number of user ratings.
+        vicinity:
+          type: string
+          description: A simplified address for the hotel.
