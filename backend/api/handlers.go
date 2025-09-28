@@ -4,12 +4,14 @@ import (
 	"net/http"
 	"strconv"
 
+	"terrascope/backend/models"
+	"terrascope/backend/services"
+
 	"github.com/gin-gonic/gin"
-	"terrascope/backend/repository"
 )
 
 // GetHotelsInBoundingBox is the handler for the /hotels endpoint.
-func GetHotelsInBoundingBox(repo repository.HotelRepository) gin.HandlerFunc {
+func GetHotelsInBoundingBox(svc services.HotelService) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		minLat, err := strconv.ParseFloat(c.Query("min_lat"), 64)
 		if err != nil {
@@ -32,7 +34,7 @@ func GetHotelsInBoundingBox(repo repository.HotelRepository) gin.HandlerFunc {
 			return
 		}
 
-		bbox := repository.BoundingBox{
+		bbox := models.BoundingBox{
 			MinLat: minLat,
 			MinLon: minLon,
 			MaxLat: maxLat,
@@ -41,7 +43,7 @@ func GetHotelsInBoundingBox(repo repository.HotelRepository) gin.HandlerFunc {
 
 		// For now, we pass a nil repository.
 		// In a real app, you would initialize this properly.
-		hotels, err := repo.GetHotelsInBoundingBox(bbox)
+		hotels, err := svc.GetHotelsInBoundingBox(bbox)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch hotels"})
 			return

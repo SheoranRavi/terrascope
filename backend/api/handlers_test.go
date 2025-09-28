@@ -5,18 +5,18 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"terrascope/backend/models"
+
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
-	"terrascope/backend/models"
-	"terrascope/backend/repository"
 )
 
 // MockHotelRepository is a mock implementation of the HotelRepository for testing.
 type MockHotelRepository struct {
-	GetHotelsFunc func(bbox repository.BoundingBox) ([]models.Hotel, error)
+	GetHotelsFunc func(bbox models.BoundingBox) ([]models.Hotel, error)
 }
 
-func (m *MockHotelRepository) GetHotelsInBoundingBox(bbox repository.BoundingBox) ([]models.Hotel, error) {
+func (m *MockHotelRepository) GetHotelsInBoundingBox(bbox models.BoundingBox) ([]models.Hotel, error) {
 	return m.GetHotelsFunc(bbox)
 }
 
@@ -25,7 +25,7 @@ func TestGetHotelsInBoundingBox_Success(t *testing.T) {
 
 	// Setup mock repository
 	mockRepo := &MockHotelRepository{
-		GetHotelsFunc: func(bbox repository.BoundingBox) ([]models.Hotel, error) {
+		GetHotelsFunc: func(bbox models.BoundingBox) ([]models.Hotel, error) {
 			// We expect these coordinates from the request
 			assert.Equal(t, 10.0, bbox.MinLat)
 			assert.Equal(t, 20.0, bbox.MinLon)
@@ -49,7 +49,7 @@ func TestGetHotelsInBoundingBox_Success(t *testing.T) {
 
 	// Assertions
 	assert.Equal(t, http.StatusOK, w.Code)
-	assert.JSONEq(t, `[{"id":"1","name":"Test Hotel 1","latitude":0,"longitude":0,"price":0}]`, w.Body.String())
+	assert.JSONEq(t, `[{"id":"1","name":"Test Hotel 1","latitude":0,"longitude":0}]`, w.Body.String())
 }
 
 func TestGetHotelsInBoundingBox_InvalidParams(t *testing.T) {
