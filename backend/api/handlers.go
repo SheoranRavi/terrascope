@@ -41,8 +41,6 @@ func GetHotelsInBoundingBox(svc services.HotelService) gin.HandlerFunc {
 			MaxLon: maxLon,
 		}
 
-		// For now, we pass a nil repository.
-		// In a real app, you would initialize this properly.
 		hotels, err := svc.GetHotelsInBoundingBox(bbox)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch hotels"})

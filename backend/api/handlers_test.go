@@ -12,11 +12,11 @@ import (
 )
 
 // MockHotelRepository is a mock implementation of the HotelRepository for testing.
-type MockHotelRepository struct {
+type MockHotelService struct {
 	GetHotelsFunc func(bbox models.BoundingBox) ([]models.Hotel, error)
 }
 
-func (m *MockHotelRepository) GetHotelsInBoundingBox(bbox models.BoundingBox) ([]models.Hotel, error) {
+func (m *MockHotelService) GetHotelsInBoundingBox(bbox models.BoundingBox) ([]models.Hotel, error) {
 	return m.GetHotelsFunc(bbox)
 }
 
@@ -24,7 +24,7 @@ func TestGetHotelsInBoundingBox_Success(t *testing.T) {
 	gin.SetMode(gin.TestMode)
 
 	// Setup mock repository
-	mockRepo := &MockHotelRepository{
+	mockRepo := &MockHotelService{
 		GetHotelsFunc: func(bbox models.BoundingBox) ([]models.Hotel, error) {
 			// We expect these coordinates from the request
 			assert.Equal(t, 10.0, bbox.MinLat)
@@ -33,7 +33,7 @@ func TestGetHotelsInBoundingBox_Success(t *testing.T) {
 			assert.Equal(t, 21.0, bbox.MaxLon)
 
 			return []models.Hotel{
-				{ID: "1", Name: "Test Hotel 1"},
+				{ID: 1, Name: "Test Hotel 1"},
 			}, nil
 		},
 	}
@@ -49,7 +49,7 @@ func TestGetHotelsInBoundingBox_Success(t *testing.T) {
 
 	// Assertions
 	assert.Equal(t, http.StatusOK, w.Code)
-	assert.JSONEq(t, `[{"id":"1","name":"Test Hotel 1","latitude":0,"longitude":0}]`, w.Body.String())
+	assert.JSONEq(t, `[{"id":1,"name":"Test Hotel 1","latitude":0,"longitude":0}]`, w.Body.String())
 }
 
 func TestGetHotelsInBoundingBox_InvalidParams(t *testing.T) {
