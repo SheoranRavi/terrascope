@@ -1,19 +1,23 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
+	"log/slog"
+	"os"
 	"terrascope/backend/api"
-	"terrascope/backend/repository"
+	"terrascope/backend/services"
+
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
-	// In a real application, you would initialize your repository like this.
-	// For now, we'll follow the TDD approach and it can be nil.
-	var hotelRepo repository.HotelRepository = repository.NewHotelRepository()
+	logger := slog.New(slog.NewTextHandler(os.Stdout, nil))
+	var osmSvc services.OSMService = services.NewOSMService(logger)
+	var hotelSvc services.HotelService = services.NewHotelService(osmSvc)
 
 	r := gin.Default()
-	r.GET("/hotels", api.GetHotelsInBoundingBox(hotelRepo))
+	r.GET("/hotels", api.GetHotelsInBoundingBox(hotelSvc))
+	r.GET("/health", api.GetHealth)
 
 	// We'll run on port 8080 by default.
-	r.Run()
+	r.Run("localhost:5123")
 }

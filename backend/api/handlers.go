@@ -50,3 +50,12 @@ func GetHotelsInBoundingBox(svc services.HotelService) gin.HandlerFunc {
 		c.JSON(http.StatusOK, hotels)
 	}
 }
+
+func GetHealth(c *gin.Context) {
+	healthResp := struct {
+		Health string `json:"health"`
+	}{
+		Health: "Okay",
+	}
+	c.IndentedJSON(http.StatusOK, healthResp)
+}
