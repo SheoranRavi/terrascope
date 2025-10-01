@@ -10,7 +10,12 @@ import (
 )
 
 func main() {
-	logger := slog.New(slog.NewTextHandler(os.Stdout, nil))
+	f, err := os.OpenFile("./logs/app.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	if err != nil {
+		panic("failed to open log file: " + err.Error())
+	}
+	defer f.Close()
+	logger := slog.New(slog.NewTextHandler(f, nil))
 	var osmSvc services.OSMService = services.NewOSMService(logger)
 	var hotelSvc services.HotelService = services.NewHotelService(osmSvc)
 
