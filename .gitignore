@@ -17,15 +17,18 @@
 
 # React
 # dependencies
-/node_modules
-/.pnp
+node_modules
+.pnp
 .pnp.js
+dist
+dist-ssr
+*.local
 
 # testing
 /coverage
 
 # logs
-/logs
+logs
 *.log
 
 # production
