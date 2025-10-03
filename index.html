@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terrascope - Map-Based Hotel Search</title>
+    <style>
+        /* --- CSS Reset & Basic Setup --- */
+        :root {
+            --primary-color: #007BFF;
+            --primary-hover-color: #0056b3;
+            --neutral-bg: #F8F9FA;
+            --border-color: #E9ECEF;
+            --text-dark: #212529;
+            --text-light: #6c757d;
+            --accent-green: #28A745;
+            --font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--neutral-bg);
+            color: var(--text-dark);
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+        }
+
+        /* --- Main Layout --- */
+        .app-container {
+            display: flex;
+            width: 100%;
+            height: 100%;
+        }
+
+        .results-panel {
+            width: 420px;
+            flex-shrink: 0;
+            background-color: #fff;
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .map-panel {
+            flex-grow: 1;
+            position: relative;
+            background-color: #e0e0e0; /* Placeholder map background */
+            background-image: url('https://storage.googleapis.com/gemini-repo/static/images/map_placeholder.png');
+            background-size: cover;
+            background-position: center;
+        }
+
+        /* --- Results Panel Styling --- */
+        .results-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .results-header h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .results-header p {
+            color: var(--text-light);
+            margin-top: 0.25rem;
+        }
+        
+        .filter-controls {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .filter-controls select {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background-color: #fff;
+            font-family: var(--font-family);
+        }
+
+        .hotel-list {
+            overflow-y: auto;
+            flex-grow: 1;
+            padding: 0.5rem;
+        }
+
+        /* --- Hotel Card Styling --- */
+        .hotel-card {
+            background-color: #fff;
+            border: 1px solid transparent;
+            border-radius: 8px;
+            margin: 0.5rem;
+            overflow: hidden;
+            transition: all 0.2s ease-in-out;
+            cursor: pointer;
+        }
+
+        .hotel-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            border-color: var(--primary-color);
+        }
+
+        .hotel-card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+
+        .card-content {
+            padding: 1rem;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            grid-template-rows: auto auto auto;
+            gap: 0.5rem 1rem;
+        }
+
+        .card-content h3 {
+            grid-column: 1 / 2;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .card-price {
+            grid-column: 2 / 3;
+            grid-row: 1 / 3;
+            text-align: right;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+        .card-price span {
+            font-size: 0.8rem;
+            font-weight: 400;
+            color: var(--text-light);
+        }
+
+        .card-rating {
+            grid-column: 1 / 2;
+            color: #f5a623;
+        }
+
+        .card-amenities {
+            grid-column: 1 / 3;
+            display: flex;
+            gap: 1rem;
+            color: var(--text-light);
+            font-size: 0.9rem;
+            align-items: center;
+        }
+        .card-amenities .icon {
+            display: inline-block;
+            width: 1em;
+            height: 1em;
+            stroke-width: 0;
+            stroke: currentColor;
+            fill: currentColor;
+        }
+
+        .card-cta {
+            grid-column: 1 / 3;
+            margin-top: 0.5rem;
+        }
+
+        .card-cta button {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: var(--primary-color);
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .card-cta button:hover {
+            background-color: var(--primary-hover-color);
+        }
+
+        /* --- Map Panel & Overlays --- */
+        .map-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 255, 255, 0.9);
+            padding: 2rem;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 30px rgba(0,0,0,0.1);
+            backdrop-filter: blur(5px);
+        }
+        .map-overlay h2 { font-size: 1.75rem; }
+        .map-overlay p { color: var(--text-light); margin-top: 0.5rem; }
+
+        .draw-tool {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            background-color: #fff;
+            color: var(--text-dark);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 0.75rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .draw-tool:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+        .draw-tool .icon {
+             width: 24px; height: 24px;
+        }
+
+        .map-pin {
+            position: absolute;
+            background-color: var(--primary-color);
+            color: #fff;
+            padding: 0.25rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transform: translateX(-50%);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .map-pin:hover {
+            transform: translateX(-50%) scale(1.1);
+            z-index: 10;
+        }
+        
+        #pin1 { top: 40%; left: 55%; }
+        #pin2 { top: 50%; left: 45%; }
+        #pin3 { top: 60%; left: 65%; }
+
+        .selection-box {
+            position: absolute;
+            top: 30%;
+            left: 30%;
+            width: 50%;
+            height: 50%;
+            background: rgba(0, 123, 255, 0.15);
+            border: 2px dashed var(--primary-color);
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .selection-box button {
+            padding: 1rem 2rem;
+            background-color: var(--primary-color);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        /* --- Responsive Design --- */
+        @media (max-width: 992px) {
+            .app-container {
+                flex-direction: column-reverse;
+            }
+            .results-panel {
+                width: 100%;
+                height: 45%; /* Slide-up panel effect */
+                flex-shrink: 1;
+                box-shadow: 0 -5px 15px rgba(0,0,0,0.1);
+            }
+            .map-panel {
+                height: 55%;
+            }
+            .map-overlay { display: none; } /* Hide initial overlay on mobile */
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <!-- Results / Left Panel -->
+        <aside class="results-panel">
+            <header class="results-header">
+                <h1>Terrascope</h1>
+                <p>Showing 4 hotels in your selected area</p>
+                <div class="filter-controls">
+                    <select name="sort">
+                        <option value="price_asc">Sort by: Price (Low to High)</option>
+                        <option value="price_desc">Sort by: Price (High to Low)</option>
+                        <option value="rating">Sort by: Rating</option>
+                    </select>
+                </div>
+            </header>
+
+            <div class="hotel-list">
+                <!-- Hotel Card 1 -->
+                <article class="hotel-card">
+                    <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNjUyOXwwfDF8c2VhcmNofDN8fGhvdGVsfGVufDB8fHx8MTYxODQ0MjI0MQ&ixlib=rb-1.2.1&q=80&w=400" alt="Luxury hotel pool">
+                    <div class="card-content">
+                        <h3>The Grand Coastal</h3>
+                        <div class="card-price">$258 <span>/ night</span></div>
+                        <div class="card-rating">★★★★☆</div>
+                        <div class="card-amenities">
+                            <svg class="icon" viewBox="0 0 24 24"><path d="M8.5 18c-1.93 0-3.5-1.57-3.5-3.5S6.57 11 8.5 11s3.5 1.57 3.5 3.5S10.43 18 8.5 18zm0-6c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5S9.33 12 8.5 12zm5.5 6c-1.93 0-3.5-1.57-3.5-3.5S12.07 11 14 11s3.5 1.57 3.5 3.5S15.93 18 14 18zm0-6c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5S14.83 12 14 12zM4.63 9.24C5.28 8.49 6.5 8 8.5 8s3.22.49 3.87 1.24c.24.28.66.31.94.07.28-.24.31-.66.07-.94C12.5 7.2 10.68 6.5 8.5 6.5s-4.01.7-4.88 1.87c-.24.28-.21.7.07.94.28.23.7.21.94-.07zM14 8c-2.18 0-4.01.7-4.88 1.87c-.24.28-.21.7.07.94.28.23.7.21.94-.07C10.78 9.49 12 9 14 9s3.22.49 3.87 1.24c.24.28.66.31.94.07.28-.24.31-.66.07-.94C18.01 7.7 16.18 7 14 7z"></path></svg>
+                            <span>Wifi</span>
+                            <svg class="icon" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 1.83.67 3.48 1.67 4.67L12 22l5.33-8.33C18.33 12.48 19 10.83 19 9c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"></path></svg>
+                            <span>Parking</span>
+                        </div>
+                        <div class="card-cta">
+                            <button>View Details</button>
+                        </div>
+                    </div>
+                </article>
+                <!-- Hotel Card 2 -->
+                <article class="hotel-card">
+                    <img src="https://images.unsplash.com/photo-1542314831-068cd1dbb5eb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNjUyOXwwfDF8c2VhcmNofDF8fGhvdGVsfGVufDB8fHx8MTYxODQ0MjI0MQ&ixlib=rb-1.2.1&q=80&w=400" alt="Modern hotel exterior">
+                    <div class="card-content">
+                        <h3>City Center Inn</h3>
+                        <div class="card-price">$128 <span>/ night</span></div>
+                        <div class="card-rating">★★★★☆</div>
+                        <div class="card-amenities">
+                           <svg class="icon" viewBox="0 0 24 24"><path d="M8.5 18c-1.93 0-3.5-1.57-3.5-3.5S6.57 11 8.5 11s3.5 1.57 3.5 3.5S10.43 18 8.5 18zm0-6c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5S9.33 12 8.5 12zm5.5 6c-1.93 0-3.5-1.57-3.5-3.5S12.07 11 14 11s3.5 1.57 3.5 3.5S15.93 18 14 18zm0-6c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5S14.83 12 14 12zM4.63 9.24C5.28 8.49 6.5 8 8.5 8s3.22.49 3.87 1.24c.24.28.66.31.94.07.28-.24.31-.66.07-.94C12.5 7.2 10.68 6.5 8.5 6.5s-4.01.7-4.88 1.87c-.24.28-.21.7.07.94.28.23.7.21.94-.07zM14 8c-2.18 0-4.01.7-4.88 1.87c-.24.28-.21.7.07.94.28.23.7.21.94-.07C10.78 9.49 12 9 14 9s3.22.49 3.87 1.24c.24.28.66.31.94.07.28-.24.31-.66.07-.94C18.01 7.7 16.18 7 14 7z"></path></svg>
+                            <span>Wifi</span>
+                        </div>
+                        <div class="card-cta">
+                            <button>View Details</button>
+                        </div>
+                    </div>
+                </article>
+                 <!-- Hotel Card 3 -->
+                <article class="hotel-card">
+                    <img src="https://images.unsplash.com/photo-1582719508461-905c673771fd?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNjUyOXwwfDF8c2VhcmNofDEyfHxob3RlbCUyMHJvb218ZW58MHx8fHwxNjE4NDQyMjkz&ixlib=rb-1.2.1&q=80&w=400" alt="Hotel room with a view">
+                    <div class="card-content">
+                        <h3>The Quiet Corner</h3>
+                        <div class="card-price">$95 <span>/ night</span></div>
+                        <div class="card-rating">★★★☆☆</div>
+                        <div class="card-amenities">
+                            <svg class="icon" viewBox="0 0 24 24"><path d="M8.5 18c-1.93 0-3.5-1.57-3.5-3.5S6.57 11 8.5 11s3.5 1.57 3.5 3.5S10.43 18 8.5 18zm0-6c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5S9.33 12 8.5 12zm5.5 6c-1.93 0-3.5-1.57-3.5-3.5S12.07 11 14 11s3.5 1.57 3.5 3.5S15.93 18 14 18zm0-6c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5S14.83 12 14 12zM4.63 9.24C5.28 8.49 6.5 8 8.5 8s3.22.49 3.87 1.24c.24.28.66.31.94.07.28-.24.31-.66.07-.94C12.5 7.2 10.68 6.5 8.5 6.5s-4.01.7-4.88 1.87c-.24.28-.21.7.07.94.28.23.7.21.94-.07zM14 8c-2.18 0-4.01.7-4.88 1.87c-.24.28-.21.7.07.94.28.23.7.21.94-.07C10.78 9.49 12 9 14 9s3.22.49 3.87 1.24c.24.28.66.31.94.07.28-.24.31-.66.07-.94C18.01 7.7 16.18 7 14 7z"></path></svg>
+                            <span>Wifi</span>
+                             <svg class="icon" viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM9 6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9V6zm9 14H6V10h12v10zm-6-3c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z"></path></svg>
+                            <span>Pets Allowed</span>
+                        </div>
+                        <div class="card-cta">
+                            <button>View Details</button>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </aside>
+
+        <!-- Map / Right Panel -->
+        <main class="map-panel">
+            <!-- This div would be replaced by a real map library like Leaflet or Mapbox -->
+
+            <!-- Initial State Overlay -->
+            <!-- <div class="map-overlay">
+                <h2>Find hotels in any area</h2>
+                <p>Use the search bar or pan and draw on the map to begin.</p>
+            </div> -->
+
+            <!-- Draw Tool -->
+            <button class="draw-tool" title="Draw on map">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19l7-7 3 3-7 7-3-3z"></path><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path><path d="M2 2l7.586 7.586"></path></svg>
+            </button>
+
+            <!-- Simulated user selection -->
+            <div class="selection-box">
+                <button>Search this area</button>
+            </div>
+
+            <!-- Simulated Map Pins -->
+            <div class="map-pin" id="pin1">$128</div>
+            <div class="map-pin" id="pin2">$258</div>
+            <div class="map-pin" id="pin3">$95</div>
+
+        </main>
+    </div>
+
+</body>
+</html>
