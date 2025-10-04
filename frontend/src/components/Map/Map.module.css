@@ -1,0 +1,6 @@
+.leafletContainer{
+  width: 100%;
+  height: 500px;
+  border: var(--border);
+  border-radius: var(--border-radius);
+}
