@@ -67,3 +67,9 @@ src/
 │
 └── App.jsx
 ```
+
+
+## Bug
+- leaflet-draw lib has a bug.
+- did a patch for it by setting `window.type = ''`.
+- Figure out a new library to use or a better way to patch this.
