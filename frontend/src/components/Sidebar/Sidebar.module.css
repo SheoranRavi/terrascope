@@ -1,0 +1,15 @@
+.sidebar-container {
+  display: flex;
+}
+
+.sidebar {
+  width: 250px;
+  background: #270f0f;
+  transition: width 0.3s ease;
+  border: var(--border);
+}
+
+[data-state='closed'] .sidebar {
+  width: 0;
+  overflow: hidden;
+}

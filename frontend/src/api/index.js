@@ -4,7 +4,7 @@ export const createApi = () => {
   const API_URL = import.meta.env.VITE_TERRASCOPE_API_ENDPOINT
   const api = axios.create({
     baseURL: API_URL,
-  })
+  });
 
   // for future if authorization is needed
   api.interceptors.request.use((config) => {
@@ -20,8 +20,8 @@ export const createApi = () => {
 
 const api = createApi();
 
-export const getHotels = (bounds) => {
-  return api.get('/hotels', {
+export const getHotels = async (bounds) => {
+  return await api.get('/hotels', {
     params: {
       min_lat: bounds.south,
       max_lat: bounds.north,
