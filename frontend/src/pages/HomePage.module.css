@@ -1,9 +1,26 @@
-.homeContainer{
+.layout {
   display: flex;
-  flex-direction: row;
-  height: 100vh;
+  height: 100vh; /* full height of the screen */
 }
 
-.map {
-  flex: 1; /* take all remaining space */
+.mapArea {
+  flex: 1; /* this makes the map area take all remaining space */
+  background: var(--neutral-bg);
+  transition: margin-left 0.3s ease;
+}
+
+.mapAreaWithSidebar {
+  margin-left: 240px; /* Match sidebar width */
+  transition: margin-left 0.3s ease;
+}
+
+.sidebarButton{
+  position: absolute;
+  top: 5px;
+  left: 0px;
+  z-index: 1000;
+  color: #e2e8f0;
+  border: none;
+  border-radius: var(--border-radius);
+  background-color: var(--primary-color);
 }

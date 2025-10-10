@@ -1,12 +1,17 @@
-.sidebar-container {
+.sidebarContainer {
+  width: 240px;
+  background: #0f172a;
+  color: #e2e8f0;
+  height: 100vh;
   display: flex;
+  flex-direction: column;
+  border-right: 1px solid #1e293b;
 }
 
 .sidebar {
   width: 250px;
-  background: #270f0f;
+  background: var(--neutral-bg);
   transition: width 0.3s ease;
-  border: var(--border);
 }
 
 [data-state='closed'] .sidebar {

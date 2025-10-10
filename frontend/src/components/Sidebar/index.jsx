@@ -1,24 +1,43 @@
-import React, { useContext, useEffect, useState } from "react";
-import * as Collapsible from "@radix-ui/react-collapsible";
-import { SearchContext } from "../../context/SearchContext";
+import React, { useState } from "react";
+import {Button, Drawer, CloseButton, Portal} from "@chakra-ui/react";
 
-export default function Sidebar(){
-  const {places, isLoading, searchType} = useContext(SearchContext);
-  const [open, setOpen] = useState(false);
-
-  useEffect(() => {
-    // setOpen when places changes
-    setOpen(true);
-  }, [places])
+export default function Sidebar(props) {
+  const {open, setSidebarOpen} = props;
   
   return (
-    <Collapsible.Root open={open} onOpenChange={setOpen} className="sidebar-container">
-      <Collapsible.Trigger>
-        {open ? "close" : "open"}
-      </Collapsible.Trigger>
-      <Collapsible.Content className="sidebar">
-        <p>A list of places</p>
-      </Collapsible.Content>
-    </Collapsible.Root>
+    <Drawer.Root placement="start" 
+                closeOnInteractOutside={false} 
+                trapFocus={false} 
+                modal={true}
+                open={open}
+                onOpenChange={(e) => setSidebarOpen(e.open)}>
+      {/* <Drawer.Trigger asChild>
+        <Button variant="outline" size="sm">
+          Open Drawer
+        </Button>
+      </Drawer.Trigger> */}
+      <Portal>
+        <Drawer.Positioner>
+          <Drawer.Content>
+            <Drawer.Header>
+              <Drawer.Title>Drawer Title</Drawer.Title>
+            </Drawer.Header>
+            <Drawer.Body>
+              <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
+                eiusmod tempor incididunt ut labore et dolore magna aliqua.
+              </p>
+            </Drawer.Body>
+            <Drawer.Footer>
+              <Button variant="outline">Cancel</Button>
+              <Button>Save</Button>
+            </Drawer.Footer>
+            <Drawer.CloseTrigger asChild>
+              <CloseButton size="sm" />
+            </Drawer.CloseTrigger>
+          </Drawer.Content>
+        </Drawer.Positioner>
+      </Portal>
+    </Drawer.Root>
   )
 }

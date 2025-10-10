@@ -6,7 +6,7 @@ import styles from "./Map.module.css";
 import { EditControl } from "react-leaflet-draw";
 
 export default function Map() {
-	const position = [51.505, -0.09]
+	const position = [12.905, 77.6]
 	const [bounds, setBounds] = useState(null);
 
 	const handleCreated = (e) => {

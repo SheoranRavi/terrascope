@@ -1,6 +1,7 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import React from 'react'
+import { Provider } from './components/ui/provider'
 import './index.css'
 import App from './App.jsx'
 import { SearchProvider } from './context/SearchContext.jsx'
@@ -10,8 +11,10 @@ window.type = '';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <SearchProvider>
-      <App />
-    </SearchProvider>
+    <Provider>
+      <SearchProvider>
+        <App />
+      </SearchProvider>
+    </Provider>
   </StrictMode>
 )
