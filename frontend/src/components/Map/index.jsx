@@ -1,25 +1,37 @@
 import React from "react";
-import {useState} from "react";
+import {useState, useContext, useRef} from "react";
 import L from "leaflet";
 import { MapContainer, TileLayer, Marker, Popup, FeatureGroup } from "react-leaflet";
+import {SearchContext} from "../../context/SearchContext";
 import styles from "./Map.module.css";
 import { EditControl } from "react-leaflet-draw";
 
 export default function Map() {
 	const position = [12.905, 77.6]
 	const [bounds, setBounds] = useState(null);
+	const {fetchPlaces, places} = useContext(SearchContext);
+	const rectangleRef = useRef(null);
+
+	const eraseCurrent = () => {
+		if (rectangleRef.current){
+			rectangleRef.current.remove();
+		}
+	}
 
 	const handleCreated = (e) => {
 		const layer = e.layer;
+		
 		if (layer instanceof L.Rectangle){
 			const rectangleBounds = layer.getBounds();
       const minLat = rectangleBounds.getSouthWest().lat;
       const minLng = rectangleBounds.getSouthWest().lng;
       const maxLat = rectangleBounds.getNorthEast().lat;
       const maxLng = rectangleBounds.getNorthEast().lng;
+			rectangleRef.current = layer;
 
       setBounds({ minLat, minLng, maxLat, maxLng });
       console.log("Bounding box:", { minLat, minLng, maxLat, maxLng });
+			fetchPlaces({ minLat, minLng, maxLat, maxLng });
 		}
 	}
 	return(
@@ -33,6 +45,7 @@ export default function Map() {
 				<EditControl
 					position="topright"
 					onCreated={handleCreated}
+					onDrawStart={eraseCurrent}
 					draw={{
 						rectangle:true,
 						polyline:false,

@@ -23,10 +23,10 @@ const api = createApi();
 export const getHotels = async (bounds) => {
   return await api.get('/hotels', {
     params: {
-      min_lat: bounds.south,
-      max_lat: bounds.north,
-      min_lon: bounds.west,
-      max_lon: bounds.east,
+      min_lat: bounds.minLat,
+      max_lat: bounds.maxLat,
+      min_lon: bounds.minLng,
+      max_lon: bounds.maxLng,
     }
   });
 };
