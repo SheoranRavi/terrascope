@@ -31,4 +31,16 @@ export const getHotels = async (bounds) => {
   });
 };
 
+export const searchPlaces = async (bounds, type) => {
+  return await api.get('/places', {
+    params: {
+      min_lat: bounds.minLat,
+      max_lat: bounds.maxLat,
+      min_lon: bounds.minLng,
+      max_lon: bounds.maxLng,
+      place_type: type
+    }
+  });
+};
+
 export default api;

@@ -1,6 +1,6 @@
 import { createContext, useCallback, useState } from "react";
 import React from "react";
-import {getHotels} from "../api";
+import {searchPlaces} from "../api";
 
 export const SearchContext = createContext(null);
 
@@ -12,18 +12,20 @@ export function SearchProvider({children}){
   const [isLoading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const fetchPlaces = useCallback(async (bounds, type) => {
+  const fetchPlaces = useCallback(async (bounds) => {
     try{
       setLoading(true);
-      const res = await getHotels(bounds);
-      if (res.status == 200){
+      const res = await searchPlaces(bounds, searchType);
+      if (res.status == 200 && res.data !== null){
         setPlaces(res.data);
       }else{
         setError(res.status);
+        setPlaces([]);
       }
     }catch (err){
       console.log(`error : ${err}`);
       setError(err);
+      setPlaces([]);
     }finally{
       setLoading(false);
     }

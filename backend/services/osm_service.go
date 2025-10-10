@@ -3,6 +3,7 @@ package services
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"log/slog"
 	"net/http"
 	"terrascope/backend/models"
@@ -24,7 +25,8 @@ type osmService struct {
 func (s *osmService) PostRequest(query string) (models.OverpassResponse, error) {
 	// Implement the logic to post a request to the Overpass API
 	body := bytes.NewBufferString("data=" + query)
-
+	msg := fmt.Sprintf("query: %s", query)
+	s.logger.Info(msg)
 	resp, err := s.client.Post(s.overpassEndpoint, "application/x-www-form-urlencoded", body)
 	if err != nil {
 		s.logger.Error("Failed to post request", "error", err)

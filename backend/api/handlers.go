@@ -51,6 +51,49 @@ func GetHotelsInBoundingBox(svc services.HotelService) gin.HandlerFunc {
 	}
 }
 
+func SearchPlaces(svc services.SearchService) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		minLat, err := strconv.ParseFloat(c.Query("min_lat"), 64)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid min_lat"})
+			return
+		}
+		minLon, err := strconv.ParseFloat(c.Query("min_lon"), 64)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid min_lon"})
+			return
+		}
+		maxLat, err := strconv.ParseFloat(c.Query("max_lat"), 64)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid max_lat"})
+			return
+		}
+		maxLon, err := strconv.ParseFloat(c.Query("max_lon"), 64)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid max_lon"})
+			return
+		}
+		placeType := models.PlaceType{
+			PlaceType: c.Query("place_type"),
+		}
+		placeType.Parse()
+		bbox := models.BoundingBox{
+			MinLat: minLat,
+			MinLon: minLon,
+			MaxLat: maxLat,
+			MaxLon: maxLon,
+		}
+
+		places, err := svc.SearchPlaces(bbox, placeType)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch hotels"})
+			return
+		}
+
+		c.JSON(http.StatusOK, places)
+	}
+}
+
 func GetHealth(c *gin.Context) {
 	healthResp := struct {
 		Health string `json:"health"`
