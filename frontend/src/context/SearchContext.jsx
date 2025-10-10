@@ -29,7 +29,7 @@ export function SearchProvider({children}){
     }finally{
       setLoading(false);
     }
-  }, [])
+  }, [searchType])
 
   const value = {
     places,
@@ -37,7 +37,7 @@ export function SearchProvider({children}){
     error,
     searchType,
     setSearchType,
-    fetchPlaces,
+    fetchPlaces
   };
 
   return(
