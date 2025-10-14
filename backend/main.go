@@ -18,9 +18,9 @@ func main() {
 	_, err := os.Stat(logsDirName)
 	if errors.Is(err, fs.ErrNotExist) {
 		err := os.Mkdir(logsDirName, 0755)
-	if err != nil {
-		panic("Not able to create log directory.")
-	}
+		if err != nil {
+			panic("Not able to create log directory.")
+		}
 	} else if err != nil {
 		fmt.Println(err.Error())
 	}
@@ -47,6 +47,6 @@ func main() {
 	r.GET("/places", api.SearchPlaces(searchSvc))
 	r.GET("/health", api.GetHealth)
 
-	// We'll run on port 8080 by default.
-	r.Run("localhost:5123")
+	// by default reads the PORT env variable
+	r.Run()
 }
