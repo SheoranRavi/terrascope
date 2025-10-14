@@ -29,7 +29,7 @@ export default function PlaceGroup() {
       position="absolute"
       left="50%"
       transform="translateX(-50%)"
-      zIndex={10000}
+      zIndex={1000}
     >
       <ButtonGroup isAttached gap="4">
         {options.map((opt) => (

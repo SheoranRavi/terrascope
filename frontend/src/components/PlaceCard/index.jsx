@@ -9,6 +9,7 @@ export default function PlaceCard({ placeType, name, coordinates, image }) {
       overflow="hidden"
       bg="white"
       boxShadow="md"
+      zIndex={2000}
       p={4}
       mb={4}
     >

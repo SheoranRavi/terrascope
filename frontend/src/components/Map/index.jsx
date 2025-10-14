@@ -1,14 +1,14 @@
 import React from "react";
-import {useState, useContext, useRef} from "react";
+import {useContext, useRef} from "react";
 import L from "leaflet";
 import { MapContainer, TileLayer, Marker, Popup, FeatureGroup } from "react-leaflet";
 import {SearchContext} from "../../context/SearchContext";
 import styles from "./Map.module.css";
 import { EditControl } from "react-leaflet-draw";
+import { For } from "@chakra-ui/react";
 
 export default function Map() {
 	const position = [12.905, 77.6]
-	const [bounds, setBounds] = useState(null);
 	const {fetchPlaces, places} = useContext(SearchContext);
 	const rectangleRef = useRef(null);
 
@@ -29,8 +29,6 @@ export default function Map() {
       const maxLng = rectangleBounds.getNorthEast().lng;
 			rectangleRef.current = layer;
 
-      setBounds({ minLat, minLng, maxLat, maxLng });
-      console.log("Bounding box:", { minLat, minLng, maxLat, maxLng });
 			fetchPlaces({ minLat, minLng, maxLat, maxLng });
 		}
 	}
@@ -56,16 +54,16 @@ export default function Map() {
 					}}
 				/>
 			</FeatureGroup>
+			<For each={places}>
+				{(item, idx) => (
+					<Marker position={[item.latitude, item.longitude]} key={idx}>
+						<Popup>
+							{item.name}
+						</Popup>
+					</Marker>
+				)}
+			</For>
 		</MapContainer>
-		{bounds && (
-        <div>
-          <h3>Selected Bounding Box</h3>
-          <p>Min Latitude: {bounds.minLat}</p>
-          <p>Min Longitude: {bounds.minLng}</p>
-          <p>Max Latitude: {bounds.maxLat}</p>
-          <p>Max Longitude: {bounds.maxLng}</p>
-        </div>
-      )}
 		</>
 	)
 }
