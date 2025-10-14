@@ -11,15 +11,11 @@ export default function HomePage() {
   return (
     <div className={styles.layout}>
       {!sidebarOpen && (
-        <Button
+        <Icon size="md"
           className={styles.sidebarButton}
-          onClick={() => setSidebarOpen(true)}
-          aria-label="Open sidebar"
-        >
-          <Icon size={1}>
-            <PanelLeftOpen size={1}/>
-          </Icon>
-        </Button>
+          onClick={() => setSidebarOpen(true)}>
+          <PanelLeftOpen />
+        </Icon>
       )}
       <PlaceGroup/>
       <Sidebar open={sidebarOpen} setSidebarOpen={setSidebarOpen} />

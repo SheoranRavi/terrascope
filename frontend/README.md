@@ -30,37 +30,18 @@ This component tree corresponds to the following file structure within `src/comp
 ```
 src/
 ├── components/
-│   ├── AmenityIcon/
-│   │   └── index.jsx
-│   ├── DrawTool/
+│   ├── PlaceCard/
 │   │   ├── index.jsx
-│   │   └── DrawTool.module.css
-│   ├── HotelCard/
+│   │   ├── PlaceCard.module.css
+│   │   └── PlaceCard.test.jsx
+│   ├── Sidebar/
 │   │   ├── index.jsx
-│   │   ├── HotelCard.module.css
-│   │   └── HotelCard.test.jsx
-│   ├── HotelList/
-│   │   ├── index.jsx
-│   │   └── HotelList.module.css
-│   ├── InitialOverlay/
-│   │   ├── index.jsx
-│   │   └── InitialOverlay.module.css
+│   │   └── SIdebar.module.css
 │   ├── Map/
 │   │   └── index.jsx
-│   ├── MapPanel/
-│   │   └── index.jsx
-│   ├── MapPin/
-│   │   ├── index.jsx
-│   │   └── MapPin.module.css
-│   ├── ResultsHeader/
-│   │   ├── index.jsx
-│   │   └── ResultsHeader.module.css
-│   ├── ResultsPanel/
-│   │   └── index.jsx
+|   |   |__ Map.module.css
 │   ├── SearchArea/
 │   │   └── index.jsx
-│   └── StarRating/
-│       └── index.jsx
 │
 ├── pages/
 │   └── HomePage.jsx

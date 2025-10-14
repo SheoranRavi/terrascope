@@ -27,6 +27,7 @@ export default function PlaceGroup() {
       shadow="md"
       display="inline-block"
       position="absolute"
+      top="2px"
       left="50%"
       transform="translateX(-50%)"
       zIndex={1000}
