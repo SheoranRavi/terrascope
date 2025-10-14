@@ -10,8 +10,7 @@
 }
 
 .mapAreaWithSidebar {
-  margin-left: 240px; /* Match sidebar width */
-  transition: margin-left 0.3s ease;
+  margin-left: 15vw;
 }
 
 .sidebarButton{
@@ -19,7 +18,6 @@
   top: 5px;
   left: 0px;
   z-index: 1000;
-  color: #e2e8f0;
   border: none;
   border-radius: var(--border-radius);
   cursor: pointer;

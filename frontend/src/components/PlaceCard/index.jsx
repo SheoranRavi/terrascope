@@ -25,13 +25,13 @@ export default function PlaceCard({ placeType, name, coordinates, image }) {
         />
       )}
       <Stack spacing={2}>
-        <Text fontWeight="bold" fontSize="lg">
+        <Text fontWeight="bold" className="text-responsive">
           {name}
         </Text>
-        <Badge colorScheme="teal" fontSize="0.9em" alignSelf="start">
+        <Badge colorScheme="teal" alignSelf="start" className="text-responsive">
           {placeType}
         </Badge>
-        <Text fontSize="sm" color="gray.600">
+        <Text color="gray.600" className="text-responsive">
           Coordinates: {coordinates?.latitude}, {coordinates?.longitude}
         </Text>
       </Stack>

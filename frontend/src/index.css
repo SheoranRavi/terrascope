@@ -1,13 +1,11 @@
+@import "./theme.css";
 @import "leaflet/dist/leaflet.css";
 @import "leaflet-draw/dist/leaflet.draw.css";
 
 :root{
   --primary-color: #007BFF;
   --primary-hover-color: #0056b3;
-  --neutral-bg: #F8F9FA;
   --border-color: #E9ECEF;
-  --text-dark: #212529;
-  --text-light: #6c757d;
 
   --font-family: 'Inter', sans-serif;
 
@@ -15,13 +13,13 @@
   --spacing-medium: 16px;
   --spacing-large: 32px;
 
-  --border-radius: 8px;
   --border: 2px solid black;
 }
 
 body{
   font-family: var(--font-family);
   background-color: var(--neutral-bg);
+  color: var(--text-light);
 }
 
 html, body {

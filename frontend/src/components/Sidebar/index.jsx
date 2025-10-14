@@ -3,6 +3,7 @@ import {Stack, Drawer, CloseButton, Portal, For, VStack} from "@chakra-ui/react"
 import { SearchContext } from "../../context/SearchContext";
 import { LuBox } from "react-icons/lu";
 import PlaceCard from "../PlaceCard";
+import styles from "./Sidebar.module.css";
 
 export default function Sidebar(props) {
   const {open, setSidebarOpen} = props;
@@ -25,11 +26,11 @@ export default function Sidebar(props) {
                 onOpenChange={(e) => setSidebarOpen(e.open)}>
       <Portal>
         <Drawer.Positioner>
-          <Drawer.Content>
-            <Drawer.Header>
-              <Drawer.Title fontWeight="light">{searchType !== "" ? `${searchType} places in the selected area` : `Some error ocurred: ${error}`}</Drawer.Title>
+          <Drawer.Content className={styles.sidebarContainer}>
+            <Drawer.Header className={styles.sidebarHeader}>
+              <Drawer.Title fontWeight="light" className="text-responsive">{searchType !== "" ? `${searchType} places in the selected area` : `Some error ocurred: ${error}`}</Drawer.Title>
             </Drawer.Header>
-            <Drawer.Body>
+            <Drawer.Body className={styles.sidebarBody}>
               <Stack>
                 <For each={places}
                   fallback={
@@ -48,10 +49,6 @@ export default function Sidebar(props) {
                 </For>
               </Stack>
             </Drawer.Body>
-            {/* <Drawer.Footer>
-              <Button variant="outline">Cancel</Button>
-              <Button>Save</Button>
-            </Drawer.Footer> */}
             <Drawer.CloseTrigger asChild>
               <CloseButton size="sm" />
             </Drawer.CloseTrigger>

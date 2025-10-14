@@ -1,5 +1,5 @@
 .leafletContainer{
-  width: 90vw;
+  width: 100%;
   height: 80vh;
   border: var(--border);
   border-radius: var(--border-radius);
