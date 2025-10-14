@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title">
+  <title id="title">Terrascope favicon</title>
+
+  <!-- Background circle (globe base) -->
+  <circle cx="32" cy="32" r="28" fill="#0F4C81"/>
+
+  <!-- Inner globe (sea) -->
+  <circle cx="32" cy="32" r="22" fill="#2EA4FF"/>
+
+  <!-- subtle contour / terrain shapes (greens) -->
+  <path d="M14 36c4-6 10-8 18-7s12 5 16 9" fill="none" stroke="#2ECC71" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.98"/>
+  <path d="M20 25c4 1 10 0 16 2s11 4 14 7" fill="none" stroke="#1FA65A" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" opacity="0.95"/>
+
+  <!-- longitude/latitude grid lines (subtle, white with low opacity) -->
+  <path d="M32 10 C28 10, 25 22, 25 32 C25 42, 28 54, 32 54" fill="none" stroke="#ffffff" stroke-opacity="0.14" stroke-width="1.6" stroke-linecap="round"/>
+  <path d="M12 32 C18 24, 46 24, 52 32 C46 40, 18 40, 12 32 Z" fill="none" stroke="#ffffff" stroke-opacity="0.10" stroke-width="1.6" stroke-linecap="round"/>
+
+  <!-- Magnifying glass (scope) overlapping the globe -->
+  <!-- glass circle -->
+  <g transform="translate(38,38)">
+    <circle cx="0" cy="0" r="10" fill="none" stroke="#F8FAFF" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" opacity="0.95"/>
+    <!-- inner lens highlight -->
+    <path d="M-4 -4 L-2 -5" stroke="#F8FAFF" stroke-width="1.2" stroke-linecap="round" stroke-opacity="0.9"/>
+    <!-- handle -->
+    <rect x="7" y="7" width="12" height="3.2" rx="1.6" transform="rotate(35 7 7)" fill="#27415A"/>
+    <!-- thin outline around handle for separation -->
+    <rect x="7" y="7" width="12" height="3.2" rx="1.6" transform="rotate(35 7 7)" fill="none" stroke="#0B2536" stroke-width="0.6" opacity="0.6"/>
+  </g>
+
+  <!-- small "T" monogram inside lens for brand hint -->
+  <text x="41" y="40.5" font-family="Segoe UI, Roboto, Arial, sans-serif" font-size="7.5" font-weight="700" fill="#0F4C81" text-anchor="middle" alignment-baseline="middle">T</text>
+
+  <!-- outer subtle ring for crisp edges on varying backgrounds -->
+  <circle cx="32" cy="32" r="31.5" fill="none" stroke="#08192b" stroke-opacity="0.14" stroke-width="1"/>
+</svg>
