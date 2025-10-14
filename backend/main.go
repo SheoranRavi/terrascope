@@ -1,6 +1,9 @@
 package main
 
 import (
+	"errors"
+	"fmt"
+	"io/fs"
 	"log/slog"
 	"os"
 	"terrascope/backend/api"
@@ -11,10 +14,17 @@ import (
 )
 
 func main() {
-	err := os.Mkdir("logs", 0755)
+	logsDirName := "logs"
+	_, err := os.Stat(logsDirName)
+	if errors.Is(err, fs.ErrNotExist) {
+		err := os.Mkdir(logsDirName, 0755)
 	if err != nil {
 		panic("Not able to create log directory.")
 	}
+	} else if err != nil {
+		fmt.Println(err.Error())
+	}
+
 	f, err := os.OpenFile("./logs/app.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
 		panic("failed to open log file: " + err.Error())
