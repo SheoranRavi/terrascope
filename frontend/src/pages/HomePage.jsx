@@ -1,13 +1,14 @@
-import React, {useState} from "react";
+import React, {useContext} from "react";
 import Map from "../components/Map";
 import Sidebar from "../components/Sidebar";
 import styles from "./HomePage.module.css";
 import { Button, Icon } from "@chakra-ui/react";
 import PlaceGroup from "../components/PlaceGroup";
 import {PanelLeftOpen} from "lucide-react";
+import { SearchContext } from "../context/SearchContext";
 
 export default function HomePage() {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const {sidebarOpen, setSidebarOpen } = useContext(SearchContext);
   return (
     <div className={styles.layout}>
       {!sidebarOpen && (

@@ -5,24 +5,15 @@ import { LuBox } from "react-icons/lu";
 import PlaceCard from "../PlaceCard";
 import styles from "./Sidebar.module.css";
 
-export default function Sidebar(props) {
-  const {open, setSidebarOpen} = props;
-  const {places, isLoading, error, searchType } = useContext(SearchContext);
-  const prevPlacesRef = useRef();
-
-  useEffect(() => {
-    if (prevPlacesRef.current !== undefined && prevPlacesRef.current !== places){
-      setSidebarOpen(true);
-    }
-    prevPlacesRef.current = places;
-  }, [places])
+export default function Sidebar() {
+  const {places, isLoading, error, searchType, sidebarOpen, setSidebarOpen } = useContext(SearchContext);
   
   return (
     <Drawer.Root placement="start" 
                 closeOnInteractOutside={false} 
                 trapFocus={false} 
                 modal={true}
-                open={open}
+                open={sidebarOpen}
                 onOpenChange={(e) => setSidebarOpen(e.open)}>
       <Portal>
         <Drawer.Positioner>

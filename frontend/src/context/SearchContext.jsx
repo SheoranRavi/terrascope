@@ -1,4 +1,4 @@
-import { createContext, useCallback, useState } from "react";
+import { createContext, useCallback, useEffect, useState } from "react";
 import React from "react";
 import {searchPlaces} from "../api";
 
@@ -8,6 +8,7 @@ export function SearchProvider({children}){
   // hotel, (cafe and  more in future)
   const [searchType, setSearchType] = useState('hotel');
   const [places, setPlaces] = useState([]);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const [isLoading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -28,6 +29,7 @@ export function SearchProvider({children}){
       setPlaces([]);
     }finally{
       setLoading(false);
+      setSidebarOpen(true);
     }
   }, [searchType])
 
@@ -38,7 +40,9 @@ export function SearchProvider({children}){
     searchType,
     setSearchType,
     fetchPlaces,
-    setPlaces
+    setPlaces,
+    sidebarOpen,
+    setSidebarOpen
   };
 
   return(
