@@ -37,7 +37,8 @@ export function SearchProvider({children}){
     error,
     searchType,
     setSearchType,
-    fetchPlaces
+    fetchPlaces,
+    setPlaces
   };
 
   return(

@@ -10,7 +10,6 @@ export default function PlaceGroup() {
 
   const handleChange = (opt) => {
     setSelected(opt);
-    console.log(`setSearchType: ${optionsMap[opt]}`);
     setSearchType(optionsMap[opt]);
   }
 
@@ -34,6 +33,7 @@ export default function PlaceGroup() {
       position="absolute"
       top="2px"
       left="50%"
+      pointerEvents="auto !important"
       transform="translateX(-50%)"
       zIndex={1000}
       bg="var(--neutral-bg)"
