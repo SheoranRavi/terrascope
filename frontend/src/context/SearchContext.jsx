@@ -16,6 +16,7 @@ export function SearchProvider({children}){
   const fetchPlaces = useCallback(async (bounds) => {
     try{
       setLoading(true);
+      setError(null);
       const res = await searchPlaces(bounds, searchType);
       if (res.status == 200 && res.data !== null){
         setPlaces(res.data);
@@ -25,7 +26,8 @@ export function SearchProvider({children}){
       }
     }catch (err){
       console.log(`error : ${err}`);
-      setError(err);
+      console.dir(err);
+      setError(err.response.data.error);
       setPlaces([]);
     }finally{
       setLoading(false);

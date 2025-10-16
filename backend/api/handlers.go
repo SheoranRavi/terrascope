@@ -86,7 +86,7 @@ func SearchPlaces(svc services.SearchService) gin.HandlerFunc {
 
 		places, err := svc.SearchPlaces(bbox, placeType)
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch hotels"})
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch places"})
 			return
 		}
 

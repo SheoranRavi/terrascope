@@ -50,7 +50,7 @@ function MarkersLayer({ places }) {
   return null;
 }
 
-// One issue now
+// ToDo
 // On drawStart the markers do not disappear
 export default function Map() {
 	const position = [12.905, 77.6]
@@ -58,7 +58,6 @@ export default function Map() {
 	const rectangleRef = useRef(null);
 
 	const eraseCurrent = () => {
-		console.log("eraseCurrent");
 		if (rectangleRef.current){
 			rectangleRef.current.remove();
 		}
