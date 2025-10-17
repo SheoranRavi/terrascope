@@ -51,6 +51,16 @@ function MarkersLayer({ places }) {
   return null;
 }
 
+function RecenterMap({center}){
+	const map = useMap();
+	useEffect(() => {
+		if (center){
+			map.setView(center);
+		}
+	}, [center, map])
+	return null;
+}
+
 // ToDo
 // On drawStart the markers do not disappear
 export default function Map() {
@@ -89,7 +99,7 @@ export default function Map() {
 		const getLocation = async () => {
 			try{
 				const res = await axios.get("https://ipapi.co/json/");
-				const location = [res.data.latitude, res.data.longitude]
+				const location = [res.data.latitude, res.data.longitude];
 				setCenter(location);
 			}
 			catch(err){
@@ -145,6 +155,7 @@ export default function Map() {
 				/>
 			</FeatureGroup>
 			<MarkersLayer places={places}/>
+			<RecenterMap center={center}/>
 		</MapContainer>
 		</>
 	)
