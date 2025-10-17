@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {useContext, useRef} from "react";
 import L from "leaflet";
 import { MapContainer, TileLayer, FeatureGroup, useMap } from "react-leaflet";
@@ -6,6 +6,7 @@ import {SearchContext} from "../../context/SearchContext";
 import styles from "./Map.module.css";
 import { EditControl } from "react-leaflet-draw";
 import { GeoSearchControl, OpenStreetMapProvider } from "leaflet-geosearch";
+import axios from "axios";
 import 'leaflet-geosearch/dist/geosearch.css';
 
 function SearchControl(){
@@ -53,7 +54,8 @@ function MarkersLayer({ places }) {
 // ToDo
 // On drawStart the markers do not disappear
 export default function Map() {
-	const position = [12.905, 77.6]
+	//const position = [12.905, 77.6]
+	const [center, setCenter] = useState([12.905, 77.6]);
 	const {fetchPlaces, places, searchType, setPlaces} = useContext(SearchContext);
 	const rectangleRef = useRef(null);
 
@@ -82,10 +84,41 @@ export default function Map() {
 			fetchPlaces({ minLat, minLng, maxLat, maxLng });
 		}
 	}
+
+	useEffect(() => {
+		const getLocation = async () => {
+			try{
+				const res = await axios.get("https://ipapi.co/json/");
+				const location = [res.data.latitude, res.data.longitude]
+				setCenter(location);
+			}
+			catch(err){
+				console.error("IP location failed:", err);
+			}
+		};
+		if(navigator.geolocation){
+			navigator.geolocation.getCurrentPosition((pos) => {
+				const {latitude, longitude} = pos.coords;
+				setCenter([latitude, longitude]);
+			}, (error) => {
+				console.error(error);
+				getLocation();
+			},
+			{
+				enableHighAccuracy: false,
+				timeout: 5000,
+				maximumAge: 0,
+			})
+		} else{
+			console.log("geolocation not available");
+			getLocation();
+		}
+	}, [])
+
 	return(
 		<>
 		<MapContainer className={styles.leafletContainer} 
-									center={position} zoom={13} 
+									center={center} zoom={13} 
 									scrollWheelZoom={true}>
 			<TileLayer
 				attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
