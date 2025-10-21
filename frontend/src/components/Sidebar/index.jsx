@@ -19,7 +19,7 @@ export default function Sidebar() {
         <Drawer.Positioner>
           <Drawer.Content className={styles.sidebarContainer}>
             <Drawer.Header className={styles.sidebarHeader}>
-              <Drawer.Title fontWeight="light" className="text-responsive">{searchType !== "" ? `${searchType} places in the selected area` : `Some error ocurred: ${error}`}</Drawer.Title>
+              <Drawer.Title fontWeight="light" className="text-responsive">{`${places.length} ${searchType} places in the selected area`}</Drawer.Title>
             </Drawer.Header>
             <Drawer.Body className={styles.sidebarBody}>
               {
