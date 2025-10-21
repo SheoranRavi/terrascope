@@ -1,3 +1,8 @@
+## FIN
+- I used this more as a practice project.
+- What I actually wanted to do with it was not possible with the free tools/resources/apis I could find.
+- Might spend some time on it in future.
+
 ## Rough sketch
 - Create a tool that can be used to conduct research over geographical areas
     - The research can be of types like
