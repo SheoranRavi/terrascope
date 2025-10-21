@@ -20,7 +20,9 @@ export function SearchProvider({children}){
       const res = await searchPlaces(bounds, searchType);
       if (res.status == 200 && res.data !== null){
         setPlaces(res.data);
-      }else{
+      }else if (res.status == 200){
+        setPlaces([]);
+      } else{
         setError(res.status);
         setPlaces([]);
       }
